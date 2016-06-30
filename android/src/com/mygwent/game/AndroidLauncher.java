@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.mygwent.game.GameIn;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
@@ -14,6 +15,6 @@ public class AndroidLauncher extends AndroidApplication {
 		config.useAccelerometer = false;
 		config.useCompass = false;
 
-		initialize(new GameClass(), config);
+		initialize(new GameIn(), config);
 	}
 }

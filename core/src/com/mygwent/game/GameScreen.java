@@ -1,14 +1,18 @@
 package com.mygwent.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 
-public class GameClass extends ApplicationAdapter {
+public class GameScreen implements Screen {
+
+	// Подключаем экземпляр стартового класса
+	final GameIn game;
 
 	// Камера
 	OrthographicCamera camera;
@@ -16,10 +20,12 @@ public class GameClass extends ApplicationAdapter {
 	SpriteBatch batch;
 	// Текстуры игры
 	Texture bg_texture;
-	Rectangle bg_object;
-	
-	@Override
-	public void create () {
+	Sprite bg_sprite;
+
+
+	public GameScreen(final GameIn game) {
+		// Определяем стартовый класс
+		this.game = game;
 
 		// подключение камеры
 		camera = new OrthographicCamera();
@@ -29,21 +35,17 @@ public class GameClass extends ApplicationAdapter {
 		batch = new SpriteBatch();
 
 		// Инициализация текстур
-		bg_texture = new Texture("background.png");
+		bg_texture = new Texture("gaming_table.png");
+		bg_sprite = new Sprite(bg_texture, 1280, 800);
+		bg_sprite.setPosition(0, 0);
 
-		// Обозначение параметров фонового компонента
-		bg_object = new Rectangle();
-		bg_object.x = 0;
-		bg_object.y = 0;
-		bg_object.width = 1280;
-		bg_object.height = 800;
-
+		// Отключаем постоянный рендер карты
+		Gdx.graphics.setContinuousRendering(false);
 
 	}
 
-
 	@Override
-	public void render () {
+	public void render (float delta) {
 		// Обновление экрана (очистка)
 		Gdx.gl.glClearColor(0, 0.5f, 0.5f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -51,18 +53,26 @@ public class GameClass extends ApplicationAdapter {
 		// Обновление камеры
 		camera.update();
 
+
 		// Устанавливаем матрицу проекции на камеру
 		batch.setProjectionMatrix(camera.combined);
 		// Обновление полотна
 		batch.begin();
 
 		// Рисуем фон
-		batch.draw(bg_texture, bg_object.x, bg_object.y);
+		batch.disableBlending();
+		bg_sprite.draw(batch);
+		batch.enableBlending();
+
+		// Рисуем все остальное
 
 
 		batch.end();
-	}
 
+
+		// Включение 1 обновления кадра
+		//Gdx.graphics.requestRendering();
+	}
 
 	@Override
 	public void dispose () {
@@ -70,5 +80,33 @@ public class GameClass extends ApplicationAdapter {
 		bg_texture.dispose();
 	}
 
+
+
+	// Остальные методы определяем пустыми
+	@Override
+	public void show() {
+
+
+	}
+	@Override
+	public void pause() {
+
+
+	}
+	@Override
+	public void resume() {
+
+
+	}
+	@Override
+	public void resize(int width, int height) {
+
+
+	}
+	@Override
+	public void hide() {
+
+
+	}
 
 }
