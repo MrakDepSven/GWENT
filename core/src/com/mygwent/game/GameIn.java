@@ -35,5 +35,6 @@ public class GameIn extends Game {
     public void dispose() {
         batch.dispose();
         font.dispose();
+        AssetLoader.dispose();
     }
 }

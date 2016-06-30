@@ -12,9 +12,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
  */
 public class MenuScreen implements Screen {
 
-    // Файл для хранения статистики
-    FileHandle file;
-
     // Подключаем точку входа
     final GameIn game;
 
@@ -22,11 +19,10 @@ public class MenuScreen implements Screen {
     OrthographicCamera camera;
 
     // Конструктор класса Меню
-    public MenuScreen(final GameIn game){
-        this.game = game;
+    public MenuScreen(final GameIn gam){
+        this.game = gam;
 
-        // Локальный файл для хранения игровой статистики
-        file = Gdx.files.local("myfile.txt");
+        AssetLoader.load();
 
         // Задаем параметры камеры
         camera = new OrthographicCamera();
