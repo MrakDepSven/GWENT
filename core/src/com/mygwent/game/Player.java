@@ -13,19 +13,26 @@ public class Player {
 
     // Карты в руке
     public Array<Card> playerCard;
-    // Количество карт в руке
-    int amountPlayerCard;
+
+    private int amountPlayerCard;       // Количество карт в руке
+    private int amountPlayerLives;      // Количество жизней
+
+    // true - если игрок, false - если ИИ
+    boolean player_check;
 
 
-    Player(){
+    Player(boolean player_check){
 
-        // Инициализация руки карт
+        // Проверяем игрок это или ИИ
+        this.player_check = player_check;
+        // Инициализация карт в руке
         playerCard = new Array<Card>();
-        // Стандартное количество карт
-        amountPlayerCard = 10;
+
+        amountPlayerCard = 10;      // Стандартное количество карт
+        amountPlayerLives = 2;      // Стандартное количество жизней
     }
 
-    // Генерация руки игрока
+    // Генерация карт в руке
     public void generateHand(){
 
         int random;
@@ -76,8 +83,20 @@ public class Player {
 
     }
 
-    // Приянять значение карты
+    // Приянять изменение количества карт в руке
     public void setAmountPlayerCard(int amountPlayerCard) {
         this.amountPlayerCard += amountPlayerCard;
+    }
+
+    public int getAmountPlayerCard() {
+        return amountPlayerCard;
+    }
+
+    public void setAmounPlayertLives(int amounPlayertLives) {
+        this.amountPlayerLives -= amounPlayertLives;
+    }
+
+    public int getAmountPlayerLives() {
+        return amountPlayerLives;
     }
 }

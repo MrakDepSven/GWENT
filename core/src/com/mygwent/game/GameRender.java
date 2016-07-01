@@ -68,7 +68,6 @@ public class GameRender {
         batch.end();
 
         // Отрисовка карт
-
         myWorld.player_test.renderHand(batch);
 
         Card card_test = new Card("", 0, 0, 0);

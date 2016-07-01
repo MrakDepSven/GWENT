@@ -8,11 +8,15 @@ public class GameWorld {
 
     // Создаем экземпляр ирока
     Player player_test;
+    Player enemy_player;
 
     public GameWorld(){
 
-        // Инициализация игрока
-        player_test = new Player();
+        // Инициализация игроков
+        player_test = new Player(true);
+        enemy_player = new Player(false);
+
+
         // Генерация руки игрока
         player_test.generateHand();
 
