@@ -20,6 +20,8 @@ public class GameIn extends Game {
         batch = new SpriteBatch();
         font = new BitmapFont();
 
+        AssetLoader.load();
+
         // Рисуем меню
         this.setScreen(new MenuScreen(this));
     }
@@ -36,5 +38,6 @@ public class GameIn extends Game {
         batch.dispose();
         font.dispose();
         AssetLoader.dispose();
+
     }
 }

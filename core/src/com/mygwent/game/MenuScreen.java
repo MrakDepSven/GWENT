@@ -1,9 +1,7 @@
 package com.mygwent.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
@@ -21,8 +19,6 @@ public class MenuScreen implements Screen {
     // Конструктор класса Меню
     public MenuScreen(final GameIn gam){
         this.game = gam;
-
-        AssetLoader.load();
 
         // Задаем параметры камеры
         camera = new OrthographicCamera();

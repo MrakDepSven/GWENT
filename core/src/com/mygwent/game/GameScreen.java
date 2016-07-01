@@ -14,12 +14,15 @@ public class GameScreen implements Screen {
 	public GameScreen(final GameIn game) {
 
 		// Инициализация обновлений стола и графики
+		CardDeckLoader.loadDeckCard();
 		world = new GameWorld();
 		renderer = new GameRender(world);
 
+		// Запускаем процесс обработки нажатия на карту
+
+
 		// Определяем стартовый класс
 		this.game = game;
-
 	}
 
 	@Override
@@ -33,8 +36,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose () {
-		//batch.dispose();
-		//bg_texture.dispose();
+
 	}
 
 
