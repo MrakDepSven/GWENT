@@ -1,6 +1,8 @@
 package com.mygwent.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.input.GestureDetector;
 
 public class GameScreen implements Screen {
 
@@ -18,24 +20,23 @@ public class GameScreen implements Screen {
 		world = new GameWorld();
 		renderer = new GameRender(world);
 
-		// Запускаем процесс обработки нажатия на карту
-
-
 		// Определяем стартовый класс
 		this.game = game;
+
+		// отключение рендера
+		Gdx.graphics.setContinuousRendering(false);
 	}
 
 	@Override
 	public void render (float delta) {
-
 		// Запуск обновлений
-		world.update(delta);
-		renderer.render();
-
+		world.update(delta);	// логика
+		renderer.render();		// рендер
 	}
 
 	@Override
 	public void dispose () {
+
 
 	}
 

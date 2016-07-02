@@ -1,10 +1,12 @@
 package com.mygwent.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 
 /**
@@ -15,8 +17,6 @@ public class GameRender {
     // Создаем экземпляр стола, для доступа к нему
     private GameWorld myWorld;
 
-
-
     // Камера
     OrthographicCamera camera;
 
@@ -24,29 +24,32 @@ public class GameRender {
     SpriteBatch batch;
 
     public GameRender(GameWorld world){
+
+        Gdx.graphics.setContinuousRendering(false);
+        
+        // Подключаем игровое поле
         myWorld = world;
 
-        // подключение камеры
+        // Подключение камеры
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 1280, 800);
 
-        // инициализация полтна
+        // Инициализация полотна
         batch = new SpriteBatch();
-
-
-
-        // Отключаем постоянный рендер карты
-        // Gdx.graphics.setContinuousRendering(false);
     }
 
     public void render(){
-
-        // Включение 1 обновления кадра
-        Gdx.graphics.requestRendering();
-
         // Обновление экрана (очистка)
         Gdx.gl.glClearColor(0, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // FPS
+        BitmapFont font = new BitmapFont();;
+        Label label =  new Label(" ", new Label.LabelStyle(font, Color.WHITE));
+        StringBuilder builder = new StringBuilder();
+        builder.append(" FPS: ").append(Gdx.graphics.getFramesPerSecond());
+        label.setText(builder);
+        label.setPosition(0, 0);
 
         // Обновление камеры
         camera.update();
@@ -62,37 +65,17 @@ public class GameRender {
         AssetLoader.background_s.draw(batch);
         batch.enableBlending();
 
-        // Рисуем все остальное
-
+        // FPS
+        label.draw(batch, 1);
 
         batch.end();
 
-        // Отрисовка карт
-        myWorld.player_test.renderHand(batch);
+        // Рисуем инфо об игроках
+        myWorld.renderInfo(batch);
 
-        Card card_test = new Card("", 0, 0, 0);
-        card_test.setPosition(460, 30);
-        card_test.renderCard(batch);
-        card_test.setPosition(510, 30);
-        card_test.renderCard(batch);
-        card_test.setPosition(560, 30);
-        card_test.renderCard(batch);
-        card_test.setPosition(460, 156);
-        card_test.renderCard(batch);
-        card_test.setPosition(460, 280);
-        card_test.renderCard(batch);
-        card_test.setPosition(460, 406);
-        card_test.renderCard(batch);
-        card_test.setPosition(460, 533);
-        card_test.renderCard(batch);
-        card_test.setPosition(460, 659);
-        card_test.renderCard(batch);
-        card_test.setPosition(35, 344);
-        card_test.renderCard(batch);
-        card_test.setPosition(120, 344);
-        card_test.renderCard(batch);
-        card_test.setPosition(205, 344);
-        card_test.renderCard(batch);
+        // Отрисовка карт
+        myWorld.player.renderHand(batch);       // карты в руке
+        myWorld.renderDesk(batch);              // Рендер карт на столе
 
 
     }

@@ -4,10 +4,11 @@ package com.mygwent.game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+
 /**
  * Created by Александр on 30.06.2016.
  */
-public class Card  {
+public class Card {
 
     // Параметры карты
     String nameCard;        // Имя карты
@@ -47,22 +48,21 @@ public class Card  {
         this.y = y;
     }
 
+    // Отрисовка карты
     public void renderCard(SpriteBatch batch){
 
-        this.batch = batch;
+        batch.begin();
 
-        this.batch.begin();
-
-        this.batch.draw(AssetLoader.CardSprite[cardSprite], x, y);
+        batch.draw(AssetLoader.CardSprite[cardSprite], x, y);
         if(cardSprite <= 2){
-            this.batch.draw(AssetLoader.AbilitySprite[cardAbility], x + 15, y + 59);
-            power_f.draw(this.batch, power_s, x + 19, y + 95);
+            batch.draw(AssetLoader.AbilitySprite[cardAbility], x + 15, y + 59);
+            power_f.draw(batch, power_s, x + 19, y + 94);
         }
 
-        this.batch.end();
+        batch.end();
     }
 
-    public void onLongClick(){
+    public void onClick(){
 
     }
 

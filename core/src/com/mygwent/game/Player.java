@@ -11,8 +11,14 @@ import java.util.Iterator;
  */
 public class Player {
 
+    // Имя игрока
+    String name;
+
     // Карты в руке
     public Array<Card> playerCard;
+
+    // Индексты использованных карт
+    public Array<Integer> cardNumbers;
 
     private int amountPlayerCard;       // Количество карт в руке
     private int amountPlayerLives;      // Количество жизней
@@ -21,65 +27,96 @@ public class Player {
     boolean player_check;
 
 
-    Player(boolean player_check){
+    Player(String name, boolean player_check){
 
+        // Принимаем имя игрока
+        this.name = name;
         // Проверяем игрок это или ИИ
         this.player_check = player_check;
         // Инициализация карт в руке
         playerCard = new Array<Card>();
+        // Инициализация индексов карт
+        cardNumbers = new Array<Integer>();
 
-        amountPlayerCard = 10;      // Стандартное количество карт
-        amountPlayerLives = 2;      // Стандартное количество жизней
+        amountPlayerCard = 0;      // Начальное количество карт
+        amountPlayerLives = 2;     // Стандартное количество жизней
     }
 
-    // Генерация карт в руке
-    public void generateHand(){
+    // Взять карту из колоды
+    public void takeCardFromDeck(int amountCard){
 
-        int random;
+        Integer random;
 
-        for(int i = 0; i < amountPlayerCard; i++){
+        boolean i = true;
+
+        int x_point = 1092;     // позиция первой карты по х
+        int x_step = 82;        // шаг по координате х
+        int y_point = 657;      // для расчета первой координаты у
+        int y_step = 125;       // шаг по координатам y
+
+        amountCard += amountPlayerCard;
+
+        for(int ii = 0; ii < 6; ii++){
+
+            /*
+            // Если рука пустая, просто берем карту
+            if(amountPlayerCard == 0){
+                random = MathUtils.random(0, 37);
+            }
+            //Если в руке есть карта
+            else{
+
+                // Для проверки индекса взятой карты
+                Iterator<Integer> iter = cardNumbers.iterator();
+
+                // Пробегаем массив индексов
+                while(iter.hasNext()){
+
+                    // Генерируем число
+                    random = MathUtils.random(0, 37);
+
+                    // Проверяем на наличие его в массиве
+                    Integer cardNum = iter.next();
+
+                    // Находя совпадения, пробуем ещё раз
+                    if(random == cardNum){ continue; }
+                }
+            }
+            */
 
             random = MathUtils.random(0, 37);
-            // Выбираем рандомну карту в колоду
-            playerCard.add(CardDeckLoader.deckCard[random]);
+
+            // Если четная позиция карты
+          //  if(i) {
+          //      CardDeckLoader.deckCard[random].setPosition(x_point, y_point);
+           //     i = false;
+           // }
+            // Если нечетная позиция карты
+           // else {
+            CardDeckLoader.deckCard[random].setPosition(1092, y_point);
+
+               // i = true;
+            //}
+
+
+            playerCard.add(CardDeckLoader.deckCard[random]);       // Добавили карту в колоду
+            //cardNumbers.add(random);    // Записали индекс этой карты
+            //amountPlayerCard++;         // Увеличиваем количество карт в руке
+            //i++;                        // Счетчик ++
+            y_point -= 125;
         }
     }
 
     // Отрисовка руки игрока на игровом поле
     public void renderHand(SpriteBatch batch){
 
-
-        // Итератор для пробега array
+        // Итератор для пробега по "руке"
         Iterator<Card> iter = playerCard.iterator();
-        int i = 0;              // счетчик
-        int x_point = 1114;     // позиция первой карты по х
-        int x_step = 60;        // шаг по координате х
-        int y_point = 32;      // для расчета первой координаты у
-        int y_step = 125;       // шаг по координатам y
 
-        // Начало отрисовки руки
-         while(iter.hasNext()){
-            Card card_temp = iter.next();
-            // Расчет текущего значения у
-
-
-            // Если четная позиция карты
-            if((i % 2) == 0) {
-                card_temp.setPosition(x_point, y_point);
-                card_temp.renderCard(batch);
-            }
-            // Если нечетная позиция карты
-            else {
-                card_temp.setPosition(x_point + x_step, y_point);
-                card_temp.renderCard(batch);
-                y_point += y_step;
-            }
-
-            i++;
+        while(iter.hasNext()){
+            Card card_temp = iter.next();   // Выбрал
+            card_temp.renderCard(batch);    // Нарисовал
         }
-
-
-        //this.batch.end();
 
     }
 

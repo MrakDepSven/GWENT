@@ -1,6 +1,6 @@
 package com.mygwent.game;
 
-import com.badlogic.gdx.utils.Array;
+import static com.mygwent.game.Constants.*;
 
 /**
  * Created by Александр on 01.07.2016.
@@ -13,7 +13,7 @@ public class CardDeckLoader {
     // Загрузка колоды карт
     public static void loadDeckCard(){
 
-        deckCard = new Card[38];
+        deckCard = new Card[AMOUNT_CARD_IN_DECK];
 
         // Карты ближнего боя
         deckCard[0] = new Card("Гребаная пехтура", 1, 0, 3);
