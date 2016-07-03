@@ -50,8 +50,8 @@ public class CardDeckLoader {
         deckCard[27] = new Card("Лекарь Бурой Хоругви", 5, 2, 1);
         deckCard[28] = new Card("Лекарь Бурой Хоругви", 5, 2, 1);
         deckCard[29] = new Card("Лекарь Бурой Хоругви", 5, 2, 1);
-        deckCard[30] = new Card("Лекарь Бурой Хоругви", 6, 2, 4);
-        deckCard[31] = new Card("Лекарь Бурой Хоругви", 6, 2, 4);
+        deckCard[30] = new Card("Балиста", 6, 2, 4);
+        deckCard[31] = new Card("Требушет", 6, 2, 4);
 
         // Карты погоды
         deckCard[32] = new Card("Ливень", 6, 6, 4);

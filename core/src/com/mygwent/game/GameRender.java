@@ -1,12 +1,9 @@
 package com.mygwent.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 
 /**
@@ -43,14 +40,6 @@ public class GameRender {
         Gdx.gl.glClearColor(0, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // FPS
-        BitmapFont font = new BitmapFont();;
-        Label label =  new Label(" ", new Label.LabelStyle(font, Color.WHITE));
-        StringBuilder builder = new StringBuilder();
-        builder.append(" FPS: ").append(Gdx.graphics.getFramesPerSecond());
-        label.setText(builder);
-        label.setPosition(0, 0);
-
         // Обновление камеры
         camera.update();
 
@@ -65,17 +54,14 @@ public class GameRender {
         AssetLoader.background_s.draw(batch);
         batch.enableBlending();
 
-        // FPS
-        label.draw(batch, 1);
-
         batch.end();
 
         // Рисуем инфо об игроках
         myWorld.renderInfo(batch);
 
         // Отрисовка карт
-        myWorld.player.renderHand(batch);       // карты в руке
-        myWorld.renderDesk(batch);              // Рендер карт на столе
+        myWorld.player.renderHand(batch);               // Рендер карт в руке
+        myWorld.battlefield.renderBattlefield(batch);   // Рендер карт на столе
 
 
     }

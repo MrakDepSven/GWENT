@@ -1,8 +1,8 @@
 package com.mygwent.game;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.input.GestureDetector;
 
 public class GameScreen implements Screen {
 
@@ -25,6 +25,7 @@ public class GameScreen implements Screen {
 
 		// отключение рендера
 		Gdx.graphics.setContinuousRendering(false);
+		Gdx.app.setLogLevel(Application.LOG_INFO);
 	}
 
 	@Override
