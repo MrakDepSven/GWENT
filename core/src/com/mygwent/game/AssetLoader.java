@@ -18,6 +18,7 @@ public class AssetLoader {
 
     // Текстуры игры
     public static Texture background_t;        // Игровой стол (фон)
+    public static Texture pass_t;
 
     // Значки способностей
     public static Texture burst_ability_t;        // Прилив сил
@@ -56,7 +57,8 @@ public class AssetLoader {
             shower_card_s,
             mist_card_s,
             ruby_skull_s,
-            sapphire_skull_s;
+            sapphire_skull_s,
+            pass_s;
 
     public static Sprite[]
             AbilitySprite,
@@ -81,6 +83,12 @@ public class AssetLoader {
         SkullSprite = new Sprite[2];
 
         // Инициализация текстур и их спрайтов
+
+        // Кнопка пас
+        pass_t = new Texture("data/pass.png");
+        pass_t.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        pass_s = new Sprite(pass_t, 154, 111);
+
         // Фон
         background_t = new Texture("data/background.png");
         background_t.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);

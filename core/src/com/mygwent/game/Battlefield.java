@@ -46,15 +46,15 @@ public class Battlefield {
         // Инициализация остальных полей класса
         powerField = new int[6]; for (int i = 0; i < 6; i++) powerField[i] = 0;
         powerRender = new BitmapFont[6];
-
+        for (int i = 0; i < 6; i++){ powerRender[i] = new BitmapFont(); }
         weatherEffect = new boolean[4]; for (int i = 0; i < 4; i++) { weatherEffect[i] = false; }
-
-
 
     }
 
     // Добавить карту на поле боя
     public void addCardInBattlefield(Card card, int player_check){
+
+        int indexRow = 0;
 
         // Проверяем тип карты (боец / погода)
         if(card.cardSprite <= 2){ // боец
@@ -66,27 +66,28 @@ public class Battlefield {
 
                 if(card.cardAbility == 2){ // Определение шпионской карты
 
-                    switch (player_check){ // Подбрасываем шпиона сопернику и берем 2 карты
-                        case 1: // игрок
-                            if(index == 3) { field.add(card); world.player.takeCardFromDeck(2); }
-                            break;
-                        case 0: // противник
-                            if(index == 4) { field.add(card); world.enemy_player.takeCardFromDeck(2); }
-                            break;
+                    if(index == 3 && player_check == 1) {
+                        field.add(card);
+                        indexRow = 2;
+                        world.players[player_check].takeCardFromDeck(2);
                     }
-
+                    if(index == 4 && player_check == 0) {
+                        field.add(card);
+                        indexRow = 3;
+                        world.players[player_check].takeCardFromDeck(2);
+                    }
                 } else { // Если не шпион
 
                     switch (player_check) {
                         case 1: // игрок
-                            if((card.cardSprite == 0) && (index == 4)) { field.add(card); }
-                            if((card.cardSprite == 1) && (index == 5)) { field.add(card); }
-                            if((card.cardSprite == 2) && (index == 6)) { field.add(card); }
+                            if((card.cardSprite == 0) && (index == 4)) { field.add(card); indexRow = 3; }
+                            if((card.cardSprite == 1) && (index == 5)) { field.add(card); indexRow = 4; }
+                            if((card.cardSprite == 2) && (index == 6)) { field.add(card); indexRow = 5; }
                             break;
                         case 0: // противник
-                            if((card.cardSprite == 0) && (index == 3)) { field.add(card); }
-                            if((card.cardSprite == 1) && (index == 2)) { field.add(card); }
-                            if((card.cardSprite == 2) && (index == 1)) { field.add(card); }
+                            if((card.cardSprite == 0) && (index == 3)) { field.add(card); indexRow = 2; }
+                            if((card.cardSprite == 1) && (index == 2)) { field.add(card); indexRow = 1; }
+                            if((card.cardSprite == 2) && (index == 1)) { field.add(card); indexRow = 0; }
                             break;
                     }
                 }
@@ -94,6 +95,8 @@ public class Battlefield {
             }
 
         } else { // погода
+
+            indexRow = 6;
 
             switch (card.cardSprite){
                 case 3:// Карта "Чистое небо"
@@ -103,21 +106,23 @@ public class Battlefield {
                     weatherSocket.clear();
                     break;
                 case 4: // карта "Мороз"
-                    weatherEffect[1] = true;        // если карта уже есть, не добавляем
-                    if(weatherEffect[1])weatherSocket.add(card);
+                    if(!weatherEffect[1])weatherSocket.add(card);
+                    weatherEffect[1] = true;
                     break;
                 case 5: // карта "Мгла"
+                    if(!weatherEffect[2])weatherSocket.add(card);
                     weatherEffect[2] = true;
-                    if(weatherEffect[2])weatherSocket.add(card);
                     break;
                 case 6: // карта "Ливень"
+                    if(!weatherEffect[3])weatherSocket.add(card);
                     weatherEffect[3] = true;
-                    if(weatherEffect[3])weatherSocket.add(card);
                     break;
             }
 
         }
-
+        // Пересчитываем силу полей после добавления карты
+        calculatePowerField(indexRow);
+        calculateTotalPower();
         // Разрешаем рендеринг сцены
         Gdx.graphics.requestRendering();
     }
@@ -162,5 +167,73 @@ public class Battlefield {
 
             x += step;
         }
+
+        // Отрисовка силы ряда ***************************
+        batch.begin();
+        for (i = 0; i < 6; i++){
+            powerRender[i].draw(batch, Integer.toString(powerField[i]), COORDINATE_POWER_X, COORDINATE_POWER_Y[i]);
+        }
+        batch.end();
     }
+
+    // Расчет силы полей
+    public void calculatePowerField(int indexRow){
+
+        int i = 0;
+
+        for(Array<Card> field: bf){
+
+            if(i == indexRow){
+                powerField[i] = calcOneRow(field);
+            } else {
+                powerField[i] = calcOneRow(field);
+            }
+
+            i++;
+        }
+    }
+
+    // Функция рассчета силы 1 ряда карт
+    public int calcOneRow(Array<Card> field){
+
+        int powerRow = 0;
+
+        // Цикл подсчета полученых сил
+        Iterator<Card> iter = field.iterator();
+        while (iter.hasNext()){
+            Card card = iter.next();
+
+            if(card.cardSprite == 0 && weatherEffect[1] == true){
+                powerRow++;
+            } else
+            if(card.cardSprite == 1 && weatherEffect[2] == true){
+                powerRow++;
+            } else
+            if(card.cardSprite == 2 && weatherEffect[3] == true){
+                powerRow++;
+            } else {
+                powerRow += card.power_i;
+            }
+
+        }
+
+
+        return powerRow;
+    }
+
+    public void calculateTotalPower(){
+
+        world.players[0].totalPower = 0;
+        world.players[1].totalPower = 0;
+
+        for(int i = 0; i < 6; i++){
+            if(i < 3) world.players[0].totalPower += powerField[i];
+            if(i >= 3) world.players[1].totalPower += powerField[i];
+        }
+
+    }
+
 }
+
+
+

@@ -60,7 +60,7 @@ public class GameRender {
         myWorld.renderInfo(batch);
 
         // Отрисовка карт
-        myWorld.player.renderHand(batch);               // Рендер карт в руке
+        myWorld.players[1].renderHand(batch);           // Рендер карт в руке
         myWorld.battlefield.renderBattlefield(batch);   // Рендер карт на столе
 
 

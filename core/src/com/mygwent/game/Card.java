@@ -22,7 +22,6 @@ public class Card {
 
     // Для рендера карты
     BitmapFont power_f; // для отображения значения силы на карте
-    SpriteBatch batch;  // полотно для отрисовки
 
     // Конструктор игральной карты
     Card(String nameCard, int power, int cardSprite, int cardAbility) {

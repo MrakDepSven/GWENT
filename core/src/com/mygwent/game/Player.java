@@ -22,10 +22,11 @@ public class Player {
     // Индексты взятых из колоды карт
     public Array<Integer> cardNumbers;
 
+    private int amountPlayerDeck;       // Карт в колоде игрока
     private int amountPlayerCard;       // Количество карт в руке
     private int amountPlayerLives;      // Количество жизней
-    private int totalPower;             // Общая сила карт на столе
-    private int amountBrockenCard;      // Количество битых карт
+    int totalPower;             // Общая сила карт на столе
+    private int amountBrokenCard;       // Количество битых карт
 
     // 1 - если игрок, 0 - если ИИ
     private int player_check;
@@ -42,9 +43,10 @@ public class Player {
         cardPlayer = new Array<Card>();
         cardNumbers = new Array<Integer>();
 
+        amountPlayerDeck = AMOUNT_CARD_IN_DECK;
         amountPlayerCard = 0;      // Начальное количество карт
         amountPlayerLives = 2;     // Стандартное количество жизней
-        amountBrockenCard = 0;     // Битые карты
+        amountBrokenCard = 0;     // Битые карты
         totalPower = 0;            // Общая сила карт
 
     }
@@ -69,6 +71,7 @@ public class Player {
 
                 int random = MathUtils.random(0, 37);
 
+                amountPlayerDeck--;     // взяли карту из колоды
                 amountPlayerCard++;     // увеличил количество карт в руке
                 cardNumbers.add(random);    // Добавил индекс карты в список использованных
                 cardPlayer.add(CardDeckLoader.deckCard[random]); // Берем карту в руку
@@ -92,6 +95,7 @@ public class Player {
                 if(dub != 0){
                     continue;
                 }else { // если небыло, добавляем эту карту в руку
+                    amountPlayerDeck--;
                     amountPlayerCard++;
                     cardNumbers.add(random);
                     cardPlayer.add(CardDeckLoader.deckCard[random]); // Берем карту в руку
@@ -128,7 +132,6 @@ public class Player {
             }
             // Если нечетная позиция карты
             else {
-
                 card_temp.setPosition(x_point + x_step, y_point);
                 card_temp.renderCard(batch);
 
@@ -149,16 +152,44 @@ public class Player {
 
     // Блок ИИ ******************************
 
+    public void makeMove(Battlefield bf) {
 
+
+        // Делает свой ход
+        int indexCard = MathUtils.random(0, amountPlayerCard);
+        int i = 0;
+
+        Iterator<Card> iterator = cardPlayer.iterator();
+        while (iterator.hasNext()){
+            Card card = iterator.next();
+            // Если совпало с выбором кидаем на поле
+            if(indexCard == i) {
+                bf.addCardInBattlefield(card, 0);
+                // Удаляем карту из руки
+                iterator.remove();
+                // Вычитаем 1
+                amountPlayerCard--;
+            }
+            i++;
+        }
+
+    }
 
 
 
     // Все SET и GET
-    public int getAmountBrockenCard() {
-        return amountBrockenCard;
+
+    public void setAmountPlayerDeck(int amountPlayerDeck) {
+        this.amountPlayerDeck = amountPlayerDeck;
     }
-    public void setAmountBrockenCard(int amountBrockenCard) {
-        this.amountBrockenCard = amountBrockenCard;
+    public int getAmountPlayerDeck() {
+        return amountPlayerDeck;
+    }
+    public int getAmountBrokenCard() {
+        return amountBrokenCard;
+    }
+    public void setAmountBrokenCard(int amountBrokenCard) {
+        this.amountBrokenCard = amountBrokenCard;
     }
     public int getTotalPower() {
         return totalPower;
@@ -181,4 +212,6 @@ public class Player {
     public int getAmountPlayerLives() {
         return amountPlayerLives;
     }
+
+
 }

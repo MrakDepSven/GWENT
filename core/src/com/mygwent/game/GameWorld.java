@@ -8,9 +8,9 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.Iterator;
 
 import static com.mygwent.game.Constants.*;
+import java.util.Iterator;
 
 /**
  * Created by Александр on 30.06.2016.
@@ -18,14 +18,16 @@ import static com.mygwent.game.Constants.*;
 public class GameWorld implements GestureDetector.GestureListener{
 
     // Создаем экземпляры ироков
-    Player player;
-    Player enemy_player;
+    Player players[];
 
     // Игровое поле
     Battlefield battlefield;
 
-    // Жребий
-    boolean first_move;
+    // Жребий (true - ход игрока, false - ход ИИ)
+    boolean move;
+
+    // Конец игры
+    boolean end_game;
 
     // Строки для отображения информации
     BitmapFont namePlayer;      // Инфа об имени игрока
@@ -37,15 +39,16 @@ public class GameWorld implements GestureDetector.GestureListener{
     public GameWorld(){
 
         // Инициализация игроков
-        player = new Player("Player", 1);
-        enemy_player = new Player("Enemy", 0);
+        players = new Player[2];
+        players[0] = new Player("Enemy", 0);
+        players[1] = new Player("Player", 1);
 
         // Генерация руки игроков
-        player.takeCardFromDeck(10);
-        enemy_player.takeCardFromDeck(10);
+        players[1].takeCardFromDeck(10);
+        players[0].takeCardFromDeck(10);
 
         // Бросаем жребий
-        first_move = MathUtils.randomBoolean();
+        move = MathUtils.randomBoolean();
 
         // Инициализация битмапов
         namePlayer = new BitmapFont();
@@ -57,6 +60,9 @@ public class GameWorld implements GestureDetector.GestureListener{
         // Инициализация игрового поля
         battlefield = new Battlefield(this);
 
+        // Конец игры
+        end_game = false;
+
         Gdx.input.setInputProcessor(new GestureDetector(this));
     }
 
@@ -67,65 +73,43 @@ public class GameWorld implements GestureDetector.GestureListener{
 
         // Отображение информации об игрках
         for(int i = 0; i < 2; i++){
-            switch (i){
-                case 0: // Инфа об игроке
-                    namePlayer.draw(batch, player.name, 65, 196);                                                           // Имя
-                    amountDeck.draw(batch, "000", 62, 62);   // Карт в колоде
-                    brokenCard.draw(batch, Integer.toString(player.getAmountBrockenCard()), 230, 62);                       // Битых карт
-                    totalPower.draw(batch, Integer.toString(player.getTotalPower()), 253, 246);                             // Общая сила карт
-                    amountHand.draw(batch, Integer.toString(player.getAmountPlayerCard()), 197, 202);                       // Карт в руке
-                    if(player.getPlayerPass()){/*******************/}                                                       // ПАС игрока
-                    switch (player.getAmountPlayerLives()){
-                        case 2: // Если все жизни целы
-                            batch.draw(AssetLoader.sapphire_skull_s, 136, 239);
-                            batch.draw(AssetLoader.sapphire_skull_s, 174, 239);
-                            break;
-                        case 1: // Если одна сгорела
-                            batch.draw(AssetLoader.sapphire_skull_s, 136, 239);
-                            break;
-                    }
-                    // сила полей боя
-                    //player_power_11.draw(batch, Integer.toString(power_11), 312, 340);
-                    //player_power_11.draw(batch, Integer.toString(power_12), 312, 217);
-                    //player_power_11.draw(batch, Integer.toString(power_13), 312, 86);
-                    break;
+            namePlayer.draw(batch, players[i].name, COORDINATE_PLAYER_NAME_X[i], COORDINATE_PLAYER_NAME_Y[i]);                                          // Имя
+            amountDeck.draw(batch, Integer.toString(players[i].getAmountPlayerDeck()), COORDINATE_AMOUNT_IN_DECK_X[i], COORDINATE_AMOUNT_IN_DECK_Y[i]); // Карт в колоде
+            brokenCard.draw(batch, Integer.toString(players[i].getAmountBrokenCard()), COORDINATE_BROKEN_CARD_X[i], COORDINATE_BROKEN_CARD_Y[i]);       // Битых карт
+            totalPower.draw(batch, Integer.toString(players[i].getTotalPower()), COORDINATE_TOTAL_POWER_X[i], COORDINATE_TOTAL_POWER_Y[i]);             // Общая сила карт
+            amountHand.draw(batch, Integer.toString(players[i].getAmountPlayerCard()), COORDINATE_AMOUNT_HAND_X[i], COORDINATE_AMOUNT_HAND_Y[i]);       // Карт в руке
+            if(players[i].getPlayerPass()){                                                                                                             // ПАС игрока
+                AssetLoader.pass_s.setPosition(COORDINATE_PASS_X[i], COORDINATE_PASS_Y[i]);
+                AssetLoader.pass_s.draw(batch);
+            }
 
-                case 1: // Инфа о противнике
-                    namePlayer.draw(batch, enemy_player.name, 65, 519);                                                           // Имя
-                    amountDeck.draw(batch, "000", 62, 673);  // Карт в колоде
-                    brokenCard.draw(batch, Integer.toString(enemy_player.getAmountBrockenCard()), 232, 672);                                                                      // Битых карт
-                    totalPower.draw(batch, Integer.toString(enemy_player.getTotalPower()), 253, 561);                             // Общая сила карт
-                    amountHand.draw(batch, Integer.toString(enemy_player.getAmountPlayerCard()), 193, 526);                       // Карт в руке
-                    if(enemy_player.getPlayerPass()){/*******************/}                                                       // ПАС противника
-                    switch (player.getAmountPlayerLives()){
-                        case 2: // Если все жизни целы
-                            batch.draw(AssetLoader.ruby_skull_s, 134, 562);
-                            batch.draw(AssetLoader.ruby_skull_s, 172, 562);
-                            break;
-                        case 1: // Если одна сгорела
-                            batch.draw(AssetLoader.ruby_skull_s, 134, 562);
-                            break;
-                    }
-                    // сила полей боя
-                    //enemy_power_21.draw(batch, Integer.toString(power_11), 312, 469);
-                    //enemy_power_22.draw(batch, Integer.toString(power_12), 312, 595);
-                    //enemy_power_23.draw(batch, Integer.toString(power_13), 312, 719);
-
-                    break;
-
+            if (players[i].getAmountPlayerLives() == 2){
+                batch.draw(AssetLoader.SkullSprite[i], COORDINATE_FIRST_SKULL_X[i], COORDINATE_SKULL_Y[i]);
+                batch.draw(AssetLoader.SkullSprite[i], COORDINATE_SECOND_SKULL_X[i], COORDINATE_SKULL_Y[i]);
+            } else if (players[i].getAmountPlayerLives() == 1){
+                batch.draw(AssetLoader.SkullSprite[i], COORDINATE_FIRST_SKULL_X[i], COORDINATE_SKULL_Y[i]);
             }
         }
 
         batch.end();
-
     }
 
     // Ход логики игры
     public  void update(float delta){
 
+        if(players[0].getAmountPlayerCard() == 0 || players[1].getAmountPlayerCard() == 0){
+            end_game = true;
 
+        } else if (players[0].getAmountPlayerLives() == 0 || players[1].getAmountPlayerLives() == 0){
+            end_game = true;
+        }else if(!move && !players[0].getPlayerPass()){
+            // ИИ делает ход если может
+            players[0].makeMove(battlefield);
 
-
+        }
+        // Передаем эстафету игроку если он может ходить
+        //if(!players[1].getPlayerPass())
+        move = true;
     }
 
 
@@ -133,23 +117,41 @@ public class GameWorld implements GestureDetector.GestureListener{
     @Override
     public boolean tap(float x, float y, int count, int button) {
 
-        Iterator<Card> iter = player.cardPlayer.iterator();
+        // Игрок не спасанул и его ход
+        if(!players[1].getPlayerPass() && move){
 
-        while(iter.hasNext()){
-            Card card_temp = iter.next();
+            Iterator<Card> iter = players[1].cardPlayer.iterator();
 
-            // Проверю, есть ли карта в этой точке
-            if((x >= card_temp.getX())&&(x <= card_temp.getX() + 80)
-                    &&(y >= crutch_for_y(card_temp.getY()))&&(y <= crutch_for_y(card_temp.getY()) + 115)){
+            Gdx.app.log("Первый барьер пройден!", "");
 
-                // Помещаем карту на поле боя
-                battlefield.addCardInBattlefield(card_temp, 1);
-                // Удаляем её из руки
-                iter.remove();
+            while(iter.hasNext()){
+                Card card_temp = iter.next();
 
-                player.setAmountPlayerCard(-1);
+                Gdx.app.log("Я в цикле!", "");
+
+                // Проверю, есть ли карта в этой точке
+                if((x >= card_temp.getX())&&(x <= card_temp.getX() + 80)
+                        &&(y >= crutch_for_y(card_temp.getY()))&&(y <= crutch_for_y(card_temp.getY()) + 115)){
+
+                    Gdx.app.log("попал по карте!", "");
+
+                    // Помещаем карту на поле боя
+                    battlefield.addCardInBattlefield(card_temp, 1);
+                    // Удаляем её из руки
+                    iter.remove();
+
+                    Gdx.app.log("Отправил на стол!", "");
+                    players[1].setAmountPlayerCard(-1);
+
+                    // Даем ход компьютеру если он может ходить
+                    if(!players[0].getPlayerPass()){
+                        move = false;
+                        Gdx.app.log("Ход противника!", "");
+                    }
+
+                    break;
+                }
             }
-
         }
         return true;
     }
@@ -174,8 +176,8 @@ public class GameWorld implements GestureDetector.GestureListener{
         // Ловим долгий тап в область кнопки пас
         if((x >= 37)&&(x <= 142)&&(y >= 496)&&(y <= 596)){
 
-            player.playerPass();
-
+            players[1].playerPass();
+            if(!players[0].getPlayerPass()) move = false;
         }
         return true;
     }
