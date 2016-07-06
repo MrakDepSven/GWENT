@@ -25,12 +25,15 @@ public class GameScreen implements Screen {
 
 		// отключение рендера
 		Gdx.graphics.setContinuousRendering(false);
+
+		// включение логов
 		Gdx.app.setLogLevel(Application.LOG_INFO);
 	}
 
 	@Override
 	public void render (float delta) {
 		// Запуск обновлений
+		renderer.render();		// рендер
 		world.update(delta);	// логика
 		renderer.render();		// рендер
 	}

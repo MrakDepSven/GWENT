@@ -15,6 +15,8 @@ public class AssetLoader {
     public static int ability_height;
     public static int skull_width;
     public static int skull_height;
+    public static int text_menu_width;
+    public static int text_menu_height;
 
     // Текстуры игры
     public static Texture background_t;        // Игровой стол (фон)
@@ -42,6 +44,17 @@ public class AssetLoader {
     public static Texture ruby_skull_t;        // Рубиновый черепок
     public static Texture sapphire_skull_t;    // Сапфировый черепок
 
+    // Текстукры меню
+    public static Texture background_menu_t,
+            new_game_t,
+            continue_t,
+            complexity_game_t,
+            records_t,
+            exit_t,
+            accept_t,
+            back_t;
+
+
 
     public static Sprite background_s,
             null_s,
@@ -58,12 +71,22 @@ public class AssetLoader {
             mist_card_s,
             ruby_skull_s,
             sapphire_skull_s,
-            pass_s;
+            pass_s,
+            background_menu_s,
+            back_s,
+            accept_s,
+            complexity_game_s,
+            continue_s,
+            exit_s,
+            new_game_s,
+            records_s;
 
     public static Sprite[]
             AbilitySprite,
             CardSprite,
-            SkullSprite;
+            SkullSprite,
+            MenuSpriteDown,
+            MenuSpriteUp;
 
 
     public static void load(){
@@ -75,12 +98,54 @@ public class AssetLoader {
         ability_height = 17;
         skull_width = 62;
         skull_height = 60;
-
+        text_menu_width = 230;
+        text_menu_height = 70;
 
         // Инициализация текстурных паков
         AbilitySprite = new Sprite[5];
         CardSprite = new Sprite[7];
         SkullSprite = new Sprite[2];
+        MenuSpriteDown = new Sprite[5];
+        MenuSpriteUp = new Sprite[5];
+
+        // Игровое меню
+        background_menu_t = new Texture("data/background_menu.png");
+        background_menu_t.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        background_menu_s = new Sprite(background_menu_t, 1280, 800);
+        background_menu_s.setPosition(0, 0);
+
+        back_t = new Texture("data/back.png");
+        back_t.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        back_s = new Sprite(back_t, text_menu_width, text_menu_height);
+
+        accept_t = new Texture("data/accept.png");
+        accept_t.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        accept_s = new Sprite(accept_t, text_menu_width, text_menu_height);
+
+        complexity_game_t = new Texture("data/complexity_game.png");
+        complexity_game_t.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        MenuSpriteUp[3] = new Sprite(complexity_game_t, text_menu_width, text_menu_height);
+        MenuSpriteUp[3].setPosition(87, 381);
+
+        continue_t = new Texture("data/continue.png");
+        continue_t.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        MenuSpriteUp[1] = new Sprite(continue_t, text_menu_width, text_menu_height);
+        MenuSpriteUp[1].setPosition(87, 531);
+
+        exit_t = new Texture("data/exit.png");
+        exit_t.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        MenuSpriteUp[4] = new Sprite(exit_t, text_menu_width, text_menu_height);
+        MenuSpriteUp[4].setPosition(87, 306);
+
+        new_game_t = new Texture("data/new_game.png");
+        new_game_t.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        MenuSpriteUp[0] = new Sprite(new_game_t, text_menu_width, text_menu_height);
+        MenuSpriteUp[0].setPosition(87, 606);
+
+        records_t = new Texture("data/records.png");
+        records_t.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        MenuSpriteUp[2] = new Sprite(records_t, text_menu_width, text_menu_height);
+        MenuSpriteUp[2].setPosition(87, 456);
 
         // Инициализация текстур и их спрайтов
 

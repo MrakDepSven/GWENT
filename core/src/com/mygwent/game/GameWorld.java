@@ -99,17 +99,13 @@ public class GameWorld implements GestureDetector.GestureListener{
 
         if(players[0].getAmountPlayerCard() == 0 || players[1].getAmountPlayerCard() == 0){
             end_game = true;
-
         } else if (players[0].getAmountPlayerLives() == 0 || players[1].getAmountPlayerLives() == 0){
             end_game = true;
         }else if(!move && !players[0].getPlayerPass()){
-            // ИИ делает ход если может
-            players[0].makeMove(battlefield);
 
         }
         // Передаем эстафету игроку если он может ходить
-        //if(!players[1].getPlayerPass())
-        move = true;
+        if(!players[1].getPlayerPass()) move = true;
     }
 
 
@@ -122,31 +118,22 @@ public class GameWorld implements GestureDetector.GestureListener{
 
             Iterator<Card> iter = players[1].cardPlayer.iterator();
 
-            Gdx.app.log("Первый барьер пройден!", "");
-
             while(iter.hasNext()){
                 Card card_temp = iter.next();
-
-                Gdx.app.log("Я в цикле!", "");
 
                 // Проверю, есть ли карта в этой точке
                 if((x >= card_temp.getX())&&(x <= card_temp.getX() + 80)
                         &&(y >= crutch_for_y(card_temp.getY()))&&(y <= crutch_for_y(card_temp.getY()) + 115)){
 
-                    Gdx.app.log("попал по карте!", "");
-
                     // Помещаем карту на поле боя
                     battlefield.addCardInBattlefield(card_temp, 1);
                     // Удаляем её из руки
                     iter.remove();
-
-                    Gdx.app.log("Отправил на стол!", "");
                     players[1].setAmountPlayerCard(-1);
 
                     // Даем ход компьютеру если он может ходить
                     if(!players[0].getPlayerPass()){
                         move = false;
-                        Gdx.app.log("Ход противника!", "");
                     }
 
                     break;
@@ -181,9 +168,6 @@ public class GameWorld implements GestureDetector.GestureListener{
         }
         return true;
     }
-
-
-
 
 
 
